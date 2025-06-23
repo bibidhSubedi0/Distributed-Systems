@@ -4,7 +4,7 @@ Welcome to my self-learning journey through modern distributed systems. This rep
 
 ## 📅 Weekly Plan
 
-| Week | Topic | Project |
+| Phase | Topic | Project |
 |------|-------|---------|
 | 1    | RPC & Communication | gRPC-based Chat App |
 | 2    | Consensus & Replication | Distributed KV Store using Raft |
