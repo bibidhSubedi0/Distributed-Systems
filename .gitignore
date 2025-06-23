@@ -1,0 +1,25 @@
+# Binaries and build files
+*.exe
+*.out
+*.o
+
+# Go build cache
+/bin/
+/pkg/
+
+# Generated Protobuf files (optional — if you don’t want to commit them)
+gen/
+
+# Logs
+*.log
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Dependency management
+go.sum
