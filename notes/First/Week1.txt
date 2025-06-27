@@ -1,0 +1,21 @@
+Day 1:
+    - Installed: Go, protoc, plugins
+
+Day 2: Creating a reliable and secure channel between two processes located in different machines
+
+    -> IPC: Interprocess communication (communication of processes over a network)
+    -> fig1: TCP/IP suite
+    -> IP = best effort
+    -> Application layer defines high level comm protocs like HTTP, DNS. Code normally targes this layer for general web development
+
+    -> TCP: Congestion control = TCP not only guards against overwhelmin the receiver, but also
+        against flooding the underlying network.
+    -> TLS: Transport layer security. Runs on top of TCP and encrypte the channel so that application layer protocols like http can be secure
+    -> Asymmetric encryption between client and server
+    -> TLS implements authentication using ditigial signatues based on asymmetric cryptography
+    -> A certificate chain ends with a self-signed certificate issuded by a root CA fig2
+    -> A secure hash function is used to create a message authetication code (HMAC). When a
+       process receives a message,itrecomputesthedigestofthemessage and checks whether it matches the digest included in the message. 
+       If not, then the message has either been corrupted during transmission or has been tampered with. In this case, the message is dropped.
+    ->  While TCP does use a checksum to protect against data corruption,it’s not 100% reliable
+    -> Checksum = 1's complement of sum of data words; receiver adds all (data + checksum) and checks if result is intended.
