@@ -19,3 +19,6 @@ Day 2: Creating a reliable and secure channel between two processes located in d
        If not, then the message has either been corrupted during transmission or has been tampered with. In this case, the message is dropped.
     ->  While TCP does use a checksum to protect against data corruption,it’s not 100% reliable
     -> Checksum = 1's complement of sum of data words; receiver adds all (data + checksum) and checks if result is intended.
+
+Day 3: DNS Resolution
+

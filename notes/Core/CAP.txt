@@ -1,0 +1,39 @@
+-> CAP Theoram: You can only gaurantee 2 out of 3 properties
+        Consistency
+        Availability
+        Partition Tolerance
+        
+-> Consistency
+    -> Distributed Consistency : Every read receives the most recent write or an error.
+    -> Formally : All nodes see the same data at the same time. After a write is completed, a subsequent read will return that value (or an error, in stricter forms)
+    -> Variants:
+        -> Linearizability (strongest): Operations appear to occur atomically, in some order, and all clients observe them in the same order.
+        -> Sequential consistency: All clients see writes in the same order, but not necessarily in real-time order.
+        -> Eventual consistency: Given enough time, all updates will propagate to all nodes.
+
+-> Availability
+    -> Every request (read or write) receives a (non-error) response, without guarantee that it contains the most recent write.
+    -> System always responds, even under failure, No “timeouts” or “failures” from the perspective of the client.
+
+-> Partition Tolerance
+    -> The system continues to operate despite arbitrary network partitions (communication breakdowns between nodes).
+    -> Even if network splits into two or more groups that can’t communicate, the system as a whole continues to function.
+
+-> Tades-offs fig1
+
+-> You can have all 3 until a partition happens. CAP only applies under network partitions.
+-> Avilability means every (non-failing) node always returns a response, not necessarily the latest data.
+
+-> If Node 1 and Node 2 can’t communicate, each must choose:
+    Refuse requests (stay consistent, lose availability)
+    Serve requests (stay available, risk inconsistency)
+
+
+How to pick what when
+-> What does the system do? Who are the users? What’s the cost of showing stale data vs. failing to respond?
+-> Are there any actions where correctness is non-negotiable (e.g., banking transactions), or is it more important that users always get a response (e.g., social media feed)?
+
+-> In any distributed system at scale, network partitions can and do happen. You cannot choose to not be partition tolerant if you want to operate across data centers, regions, or the internet.
+
+-> When to Prefer Consistency (CP) : Use Case: Banking, inventory management, order processing, collaborative editing (Google Docs).
+-> When to Prefer Availability (AP) : Use Case: Shopping carts, social media timelines, real-time analytics, DNS.
