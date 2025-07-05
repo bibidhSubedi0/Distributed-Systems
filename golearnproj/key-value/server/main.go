@@ -13,6 +13,10 @@ type keyvalue struct {
 	mutex sync.Mutex
 }
 
+type peerinfo struct {
+	nodes string
+}
+
 func listen() {
 	kvl := keyvalue{
 		data: make(map[string]string),
@@ -61,9 +65,10 @@ func handelconnection(conn net.Conn, kvl *keyvalue) {
 
 			fmt.Println("Set ", v, " at ", k, " by ", clientAddr)
 
+		// get key=___
+
 		case "get":
 			k := strings.Split(parts[1], "=")[1]
-
 			kvl.mutex.Lock()
 			v, ok := kvl.data[k]
 			kvl.mutex.Unlock()
@@ -73,6 +78,7 @@ func handelconnection(conn net.Conn, kvl *keyvalue) {
 			} else {
 				fmt.Println("Key", k, "not found")
 			}
+
 		case "replicate":
 			fmt.Println("replicate")
 		default:
