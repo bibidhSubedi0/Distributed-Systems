@@ -1,0 +1,44 @@
+Replication Fundamentals
+    -> SMR State machine Replication
+    -> Leader-based vs leaderless Replication
+    -> Synchronous(leader waits for replicas to confrim before ack write) vs asynchronous
+
+1. Single-Leader Replication (Primary-Replica)
+    Architecture: One node (leader) handles all writes. Replicas (followers) copy the leader’s data.
+    Writes: Only go to the leader.
+    Reads: Can go to leader or followers (but followers might lag).
+    Failover: If leader fails, a new leader is elected.
+    
+    Pros:
+    Simple to reason about.
+    Strong consistency (if all reads go to leader).
+    Cons:
+
+    Leader is a single point of write bottleneck.
+    Failover can be slow/complex.
+
+2. Multi-Leader Replication
+    Architecture: Multiple nodes accept writes. Replicate changes to each other.
+    Use case: Geo-distributed systems needing local writes.
+    Pros:
+
+    High availability for writes.
+    Local writes in different regions.
+    Cons:
+
+    Conflict resolution required (concurrent changes).
+    Complexity increases.
+
+3. Leaderless Replication
+    Architecture: Any node can handle writes; data is replicated to N nodes.
+    Used by: Dynamo, Cassandra
+    Pros:
+
+    Highly available.
+    No single leader bottleneck.
+    Cons:
+
+    Consistency is eventual.
+    Read/write quorum logic is needed.
+
+[summary_table.png]

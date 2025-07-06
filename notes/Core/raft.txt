@@ -1,0 +1,50 @@
+RAFT
+
+-> Consensus Algorithm (Proof of work (mining), paxos algorithm (difficult to understand and implement), raft)
+-> More instances of server = good (in general)
+-> How all replicas stay in sync?
+-> Single leader election and log replication
+-> eg: distributed key-value server runs on 3 nodes
+    -> each hosts state machine, log and raft protocal
+        -> state machine = just a program thats replicated, get post and delete
+            -> Inputs: SET key val, DELETE key etc
+            -> Transitions: On SET foo bar: Update or insert key "foo" to value "bar", On DELETE foo: Remove key "foo" from the map. etc
+            -> Example Log: SET x 5 -> SET y 10 -> DELETE x -> SET y 20
+            -> [state_machine_eg.png]
+-> Any time a node recives a command, replica appends and saves the command as new entry in log
+-> these comands get fed to replicas state machines as input
+-> Every replica's log must conatin the same exact sequence of commands to remain Synchronoised
+-> Each replica {follower, candidate, leader}, all follower at first
+-> when no leader, follower must elect a new leader
+-> a leader is respoible for receving requests from a client and sending commands to followers
+-> only the leader can recive the request from a client
+-> if client tries to send req to a follower, we place a load balancer in front of the cluster to redirect the command to the leader
+-> each follower setsa a election time out (spefiec time interval within which the follower must hear back form the leader) (150 to 300 ms)
+-> if a folloer does not hear back in time, it becomes a candidate, initiates a new election and votes for itself, to request votes from other candidate, it sends about
+   request votes message and waits for reply with votes
+   -> request votes is an RPC. it inculdes total no. of entries and last entry
+-> once a leader is elected, it emmits, append entires message to folloers in the raft cluster. this is called "heartbeats"
+   -> append entries is another type of RPC
+-> The leader and followers may have diverging logs if there was a previous failure or partition.
+-> The leader uses AppendEntries RPCs to check and reconcile logs:
+   -> If the follower’s log matches, it accepts new entries (or recognizes there are no new entries for now).
+   -> If not, the follower rejects the entries, and the leader backs up and tries again, eventually overwriting any inconsistent follower entries.
+-> Once the leader’s log and the majority of followers’ logs are consistent, the leader can start accepting client requests 
+-> As soon as a log entry is stored on a majority of servers, it is committed.
+-> The leader notifies followers of committed entries, and both leader and followers apply them to their state machine.
+
+
+SO IN SHORT:
+    Election → New Leader
+    Leader sends heartbeats (AppendEntries)
+    Leader reconciles logs with followers
+    Client commands go to leader → leader logs and replicates to followers
+    On majority replication, entries are committed and applied to state machines
+    System stays synchronized unless a new failure occurs
+    
+
+
+-> The goal is to ensure that all nodes apply the same commands in the same order so their state machines remain identical.
+-> Its primary goal is to ensure that a cluster of servers can agree on a series of values (usually log entries)
+   even if some servers fail or messages are lost, reordered, or duplicated.
+-> Raft is often used in distributed systems to keep replicated state machines (like key-value stores or databases) in sync.
