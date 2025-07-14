@@ -56,16 +56,3 @@ func PrintDetails(node Node) {
 		fmt.Println()
 	}
 }
-
-func main() {
-	node1 := &Node{
-		ID:        1,
-		Address:   "x",
-		Role:      Follower,
-		Term:      0,
-		Log:       []string{},
-		VotedFor:  nil,
-		Neighbors: []*Node{},
-	}
-	PrintDetails(*node1)
-}
