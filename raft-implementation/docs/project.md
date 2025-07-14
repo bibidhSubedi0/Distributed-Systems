@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-You will build a distributed key-value (KV) store that uses the Raft consensus algorithm to ensure fault-tolerant, strongly consistent data replication across multiple nodes. The KV store exposes a simple API (SET/GET/DELETE) and is resilient to node failures by electing a leader and replicating logs in a cluster.
+-> distributed key-value (KV) store that uses the Raft consensus algorithm to ensure fault-tolerant, strongly consistent data replication across multiple nodes. 
+
+-> The KV store exposes a simple API (SET/GET/DELETE) and is resilient to node failures by electing a leader and replicating logs in a cluster.
 
 ---
 
@@ -10,16 +12,13 @@ You will build a distributed key-value (KV) store that uses the Raft consensus a
 
 - Implement a highly available, strongly consistent key-value store.
 - Learn and apply distributed systems concepts: consensus, replication, fault tolerance.
-- Understand and implement the Raft algorithm in Go.
-- Gain experience with RPC, concurrency, and persistent storage.
-
 ---
 
 ## Tools & Technologies
 
 | Tool/Tech            | Purpose                                      |
 |----------------------|----------------------------------------------|
-| Go (Golang)          | Main programming language                    |
+| Go                   | Main programming language                    |
 | gRPC                 | Node-to-node and client-to-cluster RPC       |
 | Protocol Buffers     | Message and API schema definition            |
 | GitHub Projects      | Task and milestone tracking                  |
@@ -27,7 +26,7 @@ You will build a distributed key-value (KV) store that uses the Raft consensus a
 | draw.io/Excalidraw   | Architecture and protocol diagrams           |
 | Go Testing Framework | Unit and integration tests                   |
 | Git                  | Version control                              |
-| (Optional) Docker    | Easy multi-node deployment                   |
+|            Docker    | Easy multi-node deployment                   |
 
 ---
 
