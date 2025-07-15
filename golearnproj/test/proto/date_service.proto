@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package dateservice;
+option go_package = "test/proto";
+
+service DateService {
+  // GetCurrentDate returns the current date and time
+  rpc GetCurrentDate(DateRequest) returns (DateResponse) {}
+  
+  // GetUserInfo returns the user information
+  rpc GetUserInfo(UserRequest) returns (UserResponse) {}
+}
+
+message DateRequest {
+  // Empty request
+}
+
+message DateResponse {
+  string current_date = 1;
+}
+
+message UserRequest {
+  // Empty request
+}
+
+message UserResponse {
+  string user_login = 1;
+}
