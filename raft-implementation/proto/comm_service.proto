@@ -1,0 +1,70 @@
+
+
+
+// Stuff I am going to need
+
+// Leader Election services
+    // RequestVote
+        /*
+            Used when candidates request votes from other servers
+            Needs to handle term number, candidate ID, last log info
+            Returns current term and whether vote was granted
+        */
+    // AppendEntries
+        /*
+            Used for heartbeat and log replication
+            Contains term, leader ID, previous log info, entries to store, leader's commit index
+            Returns current term and success status
+        */
+
+// Log replication services
+    // ReplicateLog
+    /*
+        For sending log entries from leader to followers
+        Handles batching of multiple entries
+        Includes consistency check information
+    */
+
+//  State Transfer Services
+    // InstallSnapshot
+    /*
+        For bringing lagging followers up to date
+        Transfers large chunks of state data
+        Includes term, leader ID, last included index, and chunk of data
+    */
+
+// Client Interaction Services
+    // ClientRequest
+    /*
+        Handles client commands/queries
+        Forwards to leader if received by follower
+        Returns results or leader information
+    */
+
+// Cluster Management Services
+    // AddServer
+    // RemoveServer
+
+    /*
+        AddServer RPC
+        For dynamic membership changes
+        Handles adding new servers to the cluster
+        RemoveServer RPC
+        For removing servers from the cluster
+        Handles graceful departure
+
+    */
+
+// State Query Services
+    // GetState
+    /*
+        GetState RPC
+        Returns current role (leader/follower/candidate)
+        Current term
+        Leader ID
+        Commit index
+    */
+
+
+
+

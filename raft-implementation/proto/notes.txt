@@ -1,0 +1,147 @@
+I'll elaborate on each service and how they work together in Raft consensus. Let's break it down:
+
+1. Leader Election Services (Core Raft)
+rpc RequestVote(RequestVoteRequest) returns (RequestVoteResponse)
+
+- When Used: When a follower becomes a candidate and starts an election
+- Important Fields:
+  - Term number (for logical clock)
+  - Candidate's ID
+  - Last log index and term (for log consistency check)
+- Flow:
+  - Follower's election timeout expires
+  - Converts to candidate, increments term
+  - Sends RequestVote to all other servers
+  - Other servers check their logs and current term
+  - Grant or deny vote based on log up-to-date check
+
+rpc AppendEntries(AppendEntriesRequest) returns (AppendEntriesResponse)
+
+- Used for:
+  - Heartbeat (empty entries) to maintain leadership
+  - Log replication (with entries) to sync state
+- Key Fields:
+  - Leader's term
+  - Previous log index/term for consistency
+  - Entries to append
+  - Leader's commit index
+- Flow:
+  - Leader sends AppendEntries periodically
+  - Followers validate log consistency
+  - Followers append new entries if valid
+  - Update commit index if leader says so
+
+2. Log Replication Details
+rpc ReplicateLog(ReplicateLogRequest) returns (ReplicateLogResponse)
+
+- Purpose:
+  - Efficient batching of log entries
+  - Handling log conflicts
+  - Ensuring consistency
+- Process:
+  1. Leader receives client request
+  2. Appends to own log
+  3. Sends ReplicateLog to all followers
+  4. Waits for majority response
+  5. Commits entry if majority received
+  6. Notifies client of success
+
+3. State Transfer (For Log Compaction)
+rpc InstallSnapshot(stream SnapshotChunk) returns (SnapshotResponse)
+
+- When Used:
+  - Follower too far behind
+  - Log compaction occurred
+  - New server joining
+- Streaming Process:
+  1. Break snapshot into chunks
+  2. Stream chunks to follower
+  3. Follower reconstructs state
+  4. Update follower's log
+
+4. Client Interaction Layer
+rpc ClientRequest(Command) returns (CommandResponse)
+
+- Handles:
+  - Write requests (need consensus)
+  - Read requests (can be from leader only)
+  - Leader forwarding
+- Flow:
+  1. Client sends request to any server
+  2. If follower, redirect to leader
+  3. Leader processes command
+  4. Replicates to followers
+  5. Responds to client
+
+5. Cluster Management
+rpc AddServer(AddServerRequest) returns (AddServerResponse)
+rpc RemoveServer(RemoveServerRequest) returns (RemoveServerResponse)
+
+- Membership Changes:
+  - Joint consensus approach
+  - Two-phase commit process
+  - Safe configuration transitions
+- Process:
+  1. New config proposed
+  2. Joint consensus phase
+  3. New config committed
+  4. Old config retired
+
+6. State Query and Monitoring
+rpc GetState(StateRequest) returns (StateResponse)
+
+- Provides:
+  - Current role (Leader/Follower/Candidate)
+  - Term information
+  - Leader ID
+  - Log status
+  - Cluster health
+
+Interaction Flow Example:
+1. System Start:
+   - All nodes start as followers
+   - Election timeout begins
+
+2. Leader Election:
+   
+   Follower A (timeout) → Candidate
+   ├─► RequestVote to B
+   ├─► RequestVote to C
+   └─► RequestVote to D
+   
+
+3. Log Replication:
+   
+   Client → Leader
+   ├─► AppendEntries to Follower1
+   ├─► AppendEntries to Follower2
+   └─► Response to Client
+   
+
+4. Recovery Scenario:
+   
+   Lagging Follower
+   ├─► Failed AppendEntries
+   ├─► InstallSnapshot from Leader
+   └─► Resume normal operation
+   
+
+Important Implementation Details:
+1. Timeouts:
+   - Election timeout (randomized)
+   - Heartbeat interval
+   - RPC timeouts
+
+2. State Machine:
+   
+   Follower → Candidate → Leader
+        ↑          ↓
+        └──────────┘
+   
+
+3. Safety Properties:
+   - Election Safety: one leader per term
+   - Log Matching: same index = same term
+   - Leader Completeness: committed entries stay committed
+
+Would you like me to dive deeper into any particular aspect of these interactions or explain more about a specific service?
