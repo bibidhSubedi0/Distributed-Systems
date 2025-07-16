@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v3.21.12
-// source: proto/date_service.proto
+// source: date_service.proto
 
-package proto
+package __
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -29,7 +29,7 @@ type DateRequest struct {
 
 func (x *DateRequest) Reset() {
 	*x = DateRequest{}
-	mi := &file_proto_date_service_proto_msgTypes[0]
+	mi := &file_date_service_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -41,7 +41,7 @@ func (x *DateRequest) String() string {
 func (*DateRequest) ProtoMessage() {}
 
 func (x *DateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_date_service_proto_msgTypes[0]
+	mi := &file_date_service_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -54,7 +54,7 @@ func (x *DateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DateRequest.ProtoReflect.Descriptor instead.
 func (*DateRequest) Descriptor() ([]byte, []int) {
-	return file_proto_date_service_proto_rawDescGZIP(), []int{0}
+	return file_date_service_proto_rawDescGZIP(), []int{0}
 }
 
 type DateResponse struct {
@@ -66,7 +66,7 @@ type DateResponse struct {
 
 func (x *DateResponse) Reset() {
 	*x = DateResponse{}
-	mi := &file_proto_date_service_proto_msgTypes[1]
+	mi := &file_date_service_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -78,7 +78,7 @@ func (x *DateResponse) String() string {
 func (*DateResponse) ProtoMessage() {}
 
 func (x *DateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_date_service_proto_msgTypes[1]
+	mi := &file_date_service_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -91,7 +91,7 @@ func (x *DateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DateResponse.ProtoReflect.Descriptor instead.
 func (*DateResponse) Descriptor() ([]byte, []int) {
-	return file_proto_date_service_proto_rawDescGZIP(), []int{1}
+	return file_date_service_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *DateResponse) GetCurrentDate() string {
@@ -109,7 +109,7 @@ type UserRequest struct {
 
 func (x *UserRequest) Reset() {
 	*x = UserRequest{}
-	mi := &file_proto_date_service_proto_msgTypes[2]
+	mi := &file_date_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -121,7 +121,7 @@ func (x *UserRequest) String() string {
 func (*UserRequest) ProtoMessage() {}
 
 func (x *UserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_date_service_proto_msgTypes[2]
+	mi := &file_date_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -134,7 +134,7 @@ func (x *UserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserRequest.ProtoReflect.Descriptor instead.
 func (*UserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_date_service_proto_rawDescGZIP(), []int{2}
+	return file_date_service_proto_rawDescGZIP(), []int{2}
 }
 
 type UserResponse struct {
@@ -146,7 +146,7 @@ type UserResponse struct {
 
 func (x *UserResponse) Reset() {
 	*x = UserResponse{}
-	mi := &file_proto_date_service_proto_msgTypes[3]
+	mi := &file_date_service_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -158,7 +158,7 @@ func (x *UserResponse) String() string {
 func (*UserResponse) ProtoMessage() {}
 
 func (x *UserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_date_service_proto_msgTypes[3]
+	mi := &file_date_service_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -171,7 +171,7 @@ func (x *UserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserResponse.ProtoReflect.Descriptor instead.
 func (*UserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_date_service_proto_rawDescGZIP(), []int{3}
+	return file_date_service_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UserResponse) GetUserLogin() string {
@@ -181,74 +181,172 @@ func (x *UserResponse) GetUserLogin() string {
 	return ""
 }
 
-var File_proto_date_service_proto protoreflect.FileDescriptor
+// The request message
+type GreetRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
 
-const file_proto_date_service_proto_rawDesc = "" +
+func (x *GreetRequest) Reset() {
+	*x = GreetRequest{}
+	mi := &file_date_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GreetRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GreetRequest) ProtoMessage() {}
+
+func (x *GreetRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_date_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GreetRequest.ProtoReflect.Descriptor instead.
+func (*GreetRequest) Descriptor() ([]byte, []int) {
+	return file_date_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GreetRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+// The response message
+type GreetResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Text          string                 `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GreetResponse) Reset() {
+	*x = GreetResponse{}
+	mi := &file_date_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GreetResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GreetResponse) ProtoMessage() {}
+
+func (x *GreetResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_date_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GreetResponse.ProtoReflect.Descriptor instead.
+func (*GreetResponse) Descriptor() ([]byte, []int) {
+	return file_date_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GreetResponse) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+var File_date_service_proto protoreflect.FileDescriptor
+
+const file_date_service_proto_rawDesc = "" +
 	"\n" +
-	"\x18proto/date_service.proto\x12\vdateservice\"\r\n" +
+	"\x12date_service.proto\x12\vdateservice\"\r\n" +
 	"\vDateRequest\"1\n" +
 	"\fDateResponse\x12!\n" +
 	"\fcurrent_date\x18\x01 \x01(\tR\vcurrentDate\"\r\n" +
 	"\vUserRequest\"-\n" +
 	"\fUserResponse\x12\x1d\n" +
 	"\n" +
-	"user_login\x18\x01 \x01(\tR\tuserLogin2\x9c\x01\n" +
+	"user_login\x18\x01 \x01(\tR\tuserLogin\"\"\n" +
+	"\fGreetRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"#\n" +
+	"\rGreetResponse\x12\x12\n" +
+	"\x04text\x18\x01 \x01(\tR\x04text2\xde\x01\n" +
 	"\vDateService\x12G\n" +
 	"\x0eGetCurrentDate\x12\x18.dateservice.DateRequest\x1a\x19.dateservice.DateResponse\"\x00\x12D\n" +
-	"\vGetUserInfo\x12\x18.dateservice.UserRequest\x1a\x19.dateservice.UserResponse\"\x00B\fZ\n" +
-	"test/protob\x06proto3"
+	"\vGetUserInfo\x12\x18.dateservice.UserRequest\x1a\x19.dateservice.UserResponse\"\x00\x12@\n" +
+	"\x05Greet\x12\x19.dateservice.GreetRequest\x1a\x1a.dateservice.GreetResponse\"\x00B\x03Z\x01/b\x06proto3"
 
 var (
-	file_proto_date_service_proto_rawDescOnce sync.Once
-	file_proto_date_service_proto_rawDescData []byte
+	file_date_service_proto_rawDescOnce sync.Once
+	file_date_service_proto_rawDescData []byte
 )
 
-func file_proto_date_service_proto_rawDescGZIP() []byte {
-	file_proto_date_service_proto_rawDescOnce.Do(func() {
-		file_proto_date_service_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_date_service_proto_rawDesc), len(file_proto_date_service_proto_rawDesc)))
+func file_date_service_proto_rawDescGZIP() []byte {
+	file_date_service_proto_rawDescOnce.Do(func() {
+		file_date_service_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_date_service_proto_rawDesc), len(file_date_service_proto_rawDesc)))
 	})
-	return file_proto_date_service_proto_rawDescData
+	return file_date_service_proto_rawDescData
 }
 
-var file_proto_date_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_proto_date_service_proto_goTypes = []any{
-	(*DateRequest)(nil),  // 0: dateservice.DateRequest
-	(*DateResponse)(nil), // 1: dateservice.DateResponse
-	(*UserRequest)(nil),  // 2: dateservice.UserRequest
-	(*UserResponse)(nil), // 3: dateservice.UserResponse
+var file_date_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_date_service_proto_goTypes = []any{
+	(*DateRequest)(nil),   // 0: dateservice.DateRequest
+	(*DateResponse)(nil),  // 1: dateservice.DateResponse
+	(*UserRequest)(nil),   // 2: dateservice.UserRequest
+	(*UserResponse)(nil),  // 3: dateservice.UserResponse
+	(*GreetRequest)(nil),  // 4: dateservice.GreetRequest
+	(*GreetResponse)(nil), // 5: dateservice.GreetResponse
 }
-var file_proto_date_service_proto_depIdxs = []int32{
+var file_date_service_proto_depIdxs = []int32{
 	0, // 0: dateservice.DateService.GetCurrentDate:input_type -> dateservice.DateRequest
 	2, // 1: dateservice.DateService.GetUserInfo:input_type -> dateservice.UserRequest
-	1, // 2: dateservice.DateService.GetCurrentDate:output_type -> dateservice.DateResponse
-	3, // 3: dateservice.DateService.GetUserInfo:output_type -> dateservice.UserResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 2: dateservice.DateService.Greet:input_type -> dateservice.GreetRequest
+	1, // 3: dateservice.DateService.GetCurrentDate:output_type -> dateservice.DateResponse
+	3, // 4: dateservice.DateService.GetUserInfo:output_type -> dateservice.UserResponse
+	5, // 5: dateservice.DateService.Greet:output_type -> dateservice.GreetResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_proto_date_service_proto_init() }
-func file_proto_date_service_proto_init() {
-	if File_proto_date_service_proto != nil {
+func init() { file_date_service_proto_init() }
+func file_date_service_proto_init() {
+	if File_date_service_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_date_service_proto_rawDesc), len(file_proto_date_service_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_date_service_proto_rawDesc), len(file_date_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_date_service_proto_goTypes,
-		DependencyIndexes: file_proto_date_service_proto_depIdxs,
-		MessageInfos:      file_proto_date_service_proto_msgTypes,
+		GoTypes:           file_date_service_proto_goTypes,
+		DependencyIndexes: file_date_service_proto_depIdxs,
+		MessageInfos:      file_date_service_proto_msgTypes,
 	}.Build()
-	File_proto_date_service_proto = out.File
-	file_proto_date_service_proto_goTypes = nil
-	file_proto_date_service_proto_depIdxs = nil
+	File_date_service_proto = out.File
+	file_date_service_proto_goTypes = nil
+	file_date_service_proto_depIdxs = nil
 }

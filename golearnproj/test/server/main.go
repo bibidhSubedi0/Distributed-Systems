@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 	"time"
@@ -26,6 +27,13 @@ func (s *server) GetUserInfo(ctx context.Context, req *pb.UserRequest) (*pb.User
 	return &pb.UserResponse{
 		UserLogin: "bibidhSubedi0",
 	}, nil
+}
+
+func (s *server) Greet(ctx context.Context, req *pb.GreetRequest) (*pb.GreetResponse, error) {
+	name := req.GetName()
+	resp := fmt.Sprintf("Hello k xa %s", name)
+	return &pb.GreetResponse{Text: resp}, nil
+
 }
 
 func main() {

@@ -36,4 +36,11 @@ func main() {
 		log.Fatalf("could not get user info: %v", err)
 	}
 	log.Printf("User Login: %s", userResp.UserLogin)
+
+	// Get greeting
+	rsp, err := client.Greet(ctx, &pb.GreetRequest{Name: "aalu paratha"})
+	if err != nil {
+		log.Fatalf("Cant greet %v", err)
+	}
+	log.Printf("Greeting : %s", rsp)
 }

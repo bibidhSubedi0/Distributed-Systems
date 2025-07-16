@@ -1,0 +1,122 @@
+🧠 Core Concepts
+What is gRPC?
+    -> open-source universal RPC framework developed by Google. It allows you to define services using .proto files, and generates client and server code in multiple languages (Go, Python, C++, Java, etc.).
+
+How does it compare to REST?
+    ->
+
+    | Feature           | REST             | gRPC                          |
+    | ----------------- | ---------------- | ----------------------------- |
+    | Protocol          | HTTP/1.1         | HTTP/2                        |
+    | Format            | JSON             | Protocol Buffers              |
+    | Speed             | Slower (text)    | Faster (binary, smaller)      |
+    | Code Generation   | Manual (Swagger) | Automatic (via `.proto`)      |
+    | Streaming Support | Limited          | Full streaming support        |
+    | Contract Driven   | No (Loose)       | Yes (Strongly typed `.proto`) |
+    | Best for          | Web apps         | Microservices, internal APIs  |
+
+
+Why use Protocol Buffers?
+    -> Binary format, Strongly typed, Back/forward compatible
+
+
+⚙️ Internal Architecture
+gRPC Workflow
+    -> Define service in .proto -> Generate client and server code -> Implement server -> Client makes request → serializes to protobuf → sends via HTTP/2 -> Server deserializes, handles request, sends back response
+
+gRPC Protocol & HTTP/2
+    -> Multiplexing (parallel calls over one connection) -> Header compression -> Streaming
+
+How serialization/deserialization works
+
+
+
+Profobuf features in details
+
+Messages
+message User {
+  string id = 1;
+  string name = 2;
+}
+
+Nested Messages
+message AddressBook {
+  message Person {
+    string name = 1;
+  }
+  repeated Person people = 1;
+}
+
+Enums
+enum Status {
+  UNKNOWN = 0;
+  ACTIVE = 1;
+  INACTIVE = 2;
+}
+
+Maps
+message PhoneBook {
+  map<string, string> entries = 1;
+}
+
+
+Repeated Fields (Arrays)
+message Tags {
+  repeated string tag = 1;
+}
+
+
+Imports and Options
+import "google/protobuf/timestamp.proto";
+message Event {
+  google.protobuf.Timestamp start_time = 1;
+}
+
+
+
+
+Unary
+rpc GetUser(UserRequest) returns (UserResponse);
+
+Server Streaming
+rpc ListUsers(Empty) returns (stream User);
+
+
+Client Streaming
+rpc UploadLogs(stream LogEntry) returns (UploadResult);
+
+
+Bidirectional Streaming
+rpc Chat(stream ChatMessage) returns (stream ChatMessage);
+
+
+
+Authentication and TLS
+TLS encryption by default
+Add JWT or OAuth using interceptors
+Auth metadata:
+metadata.New(map[string]string{
+  "authorization": "Bearer token123",
+})
+
+
+Summary mindmap
+
+gRPC
+├── Protocol Buffers
+│   ├── Messages, Enums, Oneof, Maps
+│   ├── Imports, Options, Extensions
+├── Services
+│   ├── Unary
+│   ├── Server Stream
+│   ├── Client Stream
+│   └── Bidirectional
+├── Go Integration
+│   ├── Protoc generation
+│   ├── Implement interfaces
+│   └── Dial client
+├── Production
+│   ├── TLS, JWT, Metadata
+│   ├── Logging & Monitoring
+│   ├── Interceptors
+│   └── Load balancing & retries

@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v3.21.12
-// source: proto/date_service.proto
+// source: date_service.proto
 
-package proto
+package __
 
 import (
 	context "context"
@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	DateService_GetCurrentDate_FullMethodName = "/dateservice.DateService/GetCurrentDate"
 	DateService_GetUserInfo_FullMethodName    = "/dateservice.DateService/GetUserInfo"
+	DateService_Greet_FullMethodName          = "/dateservice.DateService/Greet"
 )
 
 // DateServiceClient is the client API for DateService service.
@@ -31,6 +32,7 @@ type DateServiceClient interface {
 	GetCurrentDate(ctx context.Context, in *DateRequest, opts ...grpc.CallOption) (*DateResponse, error)
 	// GetUserInfo returns the user information
 	GetUserInfo(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	Greet(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetResponse, error)
 }
 
 type dateServiceClient struct {
@@ -61,6 +63,16 @@ func (c *dateServiceClient) GetUserInfo(ctx context.Context, in *UserRequest, op
 	return out, nil
 }
 
+func (c *dateServiceClient) Greet(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GreetResponse)
+	err := c.cc.Invoke(ctx, DateService_Greet_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DateServiceServer is the server API for DateService service.
 // All implementations must embed UnimplementedDateServiceServer
 // for forward compatibility.
@@ -69,6 +81,7 @@ type DateServiceServer interface {
 	GetCurrentDate(context.Context, *DateRequest) (*DateResponse, error)
 	// GetUserInfo returns the user information
 	GetUserInfo(context.Context, *UserRequest) (*UserResponse, error)
+	Greet(context.Context, *GreetRequest) (*GreetResponse, error)
 	mustEmbedUnimplementedDateServiceServer()
 }
 
@@ -84,6 +97,9 @@ func (UnimplementedDateServiceServer) GetCurrentDate(context.Context, *DateReque
 }
 func (UnimplementedDateServiceServer) GetUserInfo(context.Context, *UserRequest) (*UserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
+}
+func (UnimplementedDateServiceServer) Greet(context.Context, *GreetRequest) (*GreetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Greet not implemented")
 }
 func (UnimplementedDateServiceServer) mustEmbedUnimplementedDateServiceServer() {}
 func (UnimplementedDateServiceServer) testEmbeddedByValue()                     {}
@@ -142,6 +158,24 @@ func _DateService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DateService_Greet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GreetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DateServiceServer).Greet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DateService_Greet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DateServiceServer).Greet(ctx, req.(*GreetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DateService_ServiceDesc is the grpc.ServiceDesc for DateService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -157,7 +191,11 @@ var DateService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetUserInfo",
 			Handler:    _DateService_GetUserInfo_Handler,
 		},
+		{
+			MethodName: "Greet",
+			Handler:    _DateService_Greet_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/date_service.proto",
+	Metadata: "date_service.proto",
 }

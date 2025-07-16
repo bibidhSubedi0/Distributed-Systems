@@ -1,7 +1,10 @@
 syntax = "proto3";
 
 package dateservice;
-option go_package = "test/proto";
+option go_package = "/";
+
+
+// Service defination
 
 service DateService {
   // GetCurrentDate returns the current date and time
@@ -9,6 +12,8 @@ service DateService {
   
   // GetUserInfo returns the user information
   rpc GetUserInfo(UserRequest) returns (UserResponse) {}
+
+  rpc Greet (GreetRequest) returns (GreetResponse) {}
 }
 
 message DateRequest {
@@ -26,3 +31,23 @@ message UserRequest {
 message UserResponse {
   string user_login = 1;
 }
+
+// The request message
+message GreetRequest {
+  string name = 1;
+}
+
+// The response message
+message GreetResponse {
+  string text = 1;
+}
+
+
+
+
+/*
+  .proto is a file written using the Protocol Buffers language (protobuf), which is used to define:
+    -> Message like classes
+    -> Services like interfaces
+  gRPC usages this to generate server and client code
+*/
