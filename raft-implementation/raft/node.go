@@ -1,6 +1,9 @@
 package node
 
-import "fmt"
+import (
+	"sync"
+	"time"
+)
 
 type Role int
 
@@ -24,35 +27,60 @@ func (r Role) String() string {
 }
 
 type Node struct {
-	ID        int
+	ID        string
 	Address   string
 	Role      Role
 	Term      float32
-	Log       []string
 	VotedFor  *Node
 	Neighbors []*Node
+
+	// Timing
+	electionTimeout time.Duration
+	heartbeatTicker *time.Ticker
+	electionTimer   *time.Timer
+
+	// Logs
+	Log         []string
+	commitIndex int
+	lastApplied int
+
+	// Leader-specific State
+	nextIndex  map[string]int
+	matchIndex map[string]int
+
+	Mu          sync.Mutex    // Protects access to shared state
+	stopCh      chan struct{} // Channel for stopping the node
+	heartbeatCh chan bool     // Channel for heartbeat events
+	electionCh  chan bool     // Channel for election events
 }
 
-func PrintDetails(node Node) {
-	fmt.Printf("ID: %d\n", node.ID)
-	fmt.Printf("Address: %s\n", node.Address)
-	fmt.Printf("Role: %s\n", node.Role.String())
-	fmt.Printf("Term: %.2f\n", node.Term)
-	fmt.Printf("Log entries: %v\n", node.Log)
-
-	if node.VotedFor != nil {
-		fmt.Printf("VotedFor Node ID: %d\n", node.VotedFor.ID)
-	} else {
-		fmt.Println("VotedFor Node: nil")
+// NewNode creates and initializes a new Node
+func NewNode(id, address string) *Node {
+	n := &Node{
+		ID:          id,
+		Address:     address,
+		Role:        Follower,
+		Term:        0,
+		Log:         make([]string, 0),
+		commitIndex: -1,
+		lastApplied: -1,
+		nextIndex:   make(map[string]int),
+		matchIndex:  make(map[string]int),
+		stopCh:      make(chan struct{}),
+		heartbeatCh: make(chan bool),
+		electionCh:  make(chan bool),
 	}
+	return n
+}
 
-	fmt.Printf("Neighbors IDs: ")
-	if len(node.Neighbors) == 0 {
-		fmt.Println("none")
-	} else {
-		for _, neighbor := range node.Neighbors {
-			fmt.Printf("%d ", neighbor.ID)
-		}
-		fmt.Println()
-	}
+func (n *Node) Start() error {
+	go n.run()
+	return nil
+}
+
+func (n *Node) Stop() {
+	close(n.stopCh)
+}
+
+func (n *Node) run() {
 }

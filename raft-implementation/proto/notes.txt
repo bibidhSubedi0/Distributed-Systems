@@ -1,5 +1,3 @@
-I'll elaborate on each service and how they work together in Raft consensus. Let's break it down:
-
 1. Leader Election Services (Core Raft)
 rpc RequestVote(RequestVoteRequest) returns (RequestVoteResponse)
 

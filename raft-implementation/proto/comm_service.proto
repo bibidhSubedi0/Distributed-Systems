@@ -1,9 +1,13 @@
 
+syntax = "proto3";
+package comm_services;
+option go_package = "/";
 
 
 // Stuff I am going to need
 
 // Leader Election services
+
     // RequestVote
         /*
             Used when candidates request votes from other servers
@@ -17,6 +21,22 @@
             Returns current term and success status
         */
 
+
+service RequestVoteService{
+    rpc RequestVote(RequestVoteRequest) returns (RequestVoteResponse) {}
+
+    rpc AppendEntries(AppendEntriesRequest) returns (AppendEntriedResponse) {}
+
+}
+
+message RequestVoteRequest{}
+
+message RequestVoteResponse{}
+
+message AppendEntriesRequest{}
+
+message AppendEntriedResponse{}
+
 // Log replication services
     // ReplicateLog
     /*
@@ -24,6 +44,15 @@
         Handles batching of multiple entries
         Includes consistency check information
     */
+
+service LogReplicationService{
+    rpc ReplicateLog(ReplicateLogRequest) returns (ReplicateLogResponse) {}
+}
+message ReplicateLogRequest{}
+
+message ReplicateLogResponse{}
+
+
 
 //  State Transfer Services
     // InstallSnapshot
@@ -33,6 +62,17 @@
         Includes term, leader ID, last included index, and chunk of data
     */
 
+
+service InstallSnapshotService{
+    rpc InstallSnapshot(stream SnapshotChunk) returns (SnapshotResponse) {}
+}
+
+message SnapshotChunk{}
+
+message SnapshotResponse{}
+
+
+
 // Client Interaction Services
     // ClientRequest
     /*
@@ -40,6 +80,17 @@
         Forwards to leader if received by follower
         Returns results or leader information
     */
+
+service ClientRequestService{
+    rpc ClientRequest(CommandRequest) returns (CommandResponse) {}
+}
+
+message CommandRequest{}
+
+message CommandResponse{}
+
+
+
 
 // Cluster Management Services
     // AddServer
@@ -55,6 +106,20 @@
 
     */
 
+service ClusterManagementService{
+    rpc AddServer(AddServerRequest) returns (AddServerResponse) {}
+    rpc RemoveServer(RemoveServerRequest) returns (RemoveServerResponse) {}
+}
+
+message AddServerRequest{}
+
+message AddServerResponse{}
+
+message RemoveServerRequest{}
+
+message RemoveServerResponse{}
+
+
 // State Query Services
     // GetState
     /*
@@ -65,6 +130,11 @@
         Commit index
     */
 
+service StateQueryServic{
+    rpc GetState(StateRequest) returns (StateResponse) {}
+}
 
 
+message StateRequest{}
 
+message StateResponse{}

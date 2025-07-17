@@ -17,7 +17,7 @@ service DateService {
 }
 
 message DateRequest {
-  // Empty request
+  // Empty request0
 }
 
 message DateResponse {

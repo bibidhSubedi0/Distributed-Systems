@@ -9,7 +9,7 @@
 [DONE] 1. Define Raft node struct (ID, address, role, term, log, votedFor, neighbors).
 [DONE] 2. Set up configuration for cluster (static node list or config file).
 [DONE] 3. Initialize nodes with default state (follower, term = 0, empty log).
-4. Create networking setup (gRPC server for RPCs).
+[DONE] 4. Create networking setup (gRPC server for RPCs).
 5. Start node main loop: listen for RPCs, handle timers.
 
 ### #2 Follower state
