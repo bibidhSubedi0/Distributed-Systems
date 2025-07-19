@@ -10,7 +10,7 @@
 [DONE] 2. Set up configuration for cluster (static node list or config file).
 [DONE] 3. Initialize nodes with default state (follower, term = 0, empty log).
 [DONE] 4. Create networking setup (gRPC server for RPCs).
-5. Start node main loop: listen for RPCs, handle timers.
+[DONE] 5. Start node main loop: listen for RPCs, handle timers.
 
 ### #2 Follower state
 **Steps:**

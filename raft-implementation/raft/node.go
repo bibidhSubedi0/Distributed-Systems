@@ -73,6 +73,12 @@ func NewNode(id, address string) *Node {
 	return n
 }
 
+func AddNeighbor(n *Node, neighbor *Node) {
+	n.Mu.Lock()
+	defer n.Mu.Unlock()
+	n.Neighbors = append(n.Neighbors, neighbor)
+}
+
 func (n *Node) Start() error {
 	go n.run()
 	return nil
@@ -83,4 +89,7 @@ func (n *Node) Stop() {
 }
 
 func (n *Node) run() {
+	for {
+
+	}
 }

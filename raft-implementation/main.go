@@ -1,12 +1,18 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"log"
+	"net"
 	"os"
-	"sync"
+	"time"
 
+	pb "github.com/bibidhSubedi0/raft/proto"
 	node "github.com/bibidhSubedi0/raft/raft"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type ConfigNode struct {
@@ -16,19 +22,61 @@ type ConfigNode struct {
 
 func main() {
 
-	nodes := initializeNodes()
+	var inp bool
 
-	var wg sync.WaitGroup
-
-	activate(nodes[0])
-
-	for _, n := range nodes {
-		wg.Add(1)
-		go func(n *node.Node) {
-			defer wg.Done()
-			activate(n)
-		}(n)
+	_, err := fmt.Scan(&inp)
+	if err != nil {
+		return
 	}
+
+	if inp {
+		lis, err := net.Listen("tcp", ":50051")
+		if err != nil {
+			log.Fatalf("failed to listen: %v", err)
+		}
+
+		s := grpc.NewServer()
+		pb.RegisterTestServiceServer(s, &server{})
+
+		log.Println("Server is running on :50051")
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	} else {
+		conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
+		}
+
+		log.Printf("\nconnected")
+		defer conn.Close()
+
+		client := pb.NewTestServiceClient(conn)
+
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+
+		rsp, err := client.TestThis(ctx, &pb.TestRequest{Input: "Some input from client"})
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
+		} else {
+			log.Printf("Response : %s", rsp)
+		}
+
+	}
+
+	/*
+		nodes := initializeNodes()
+		var wg sync.WaitGroup
+		wg.Add(len(nodes))
+		for _, n := range nodes {
+			go func(n *node.Node) {
+				defer wg.Done()
+				activate(n)
+			}(n)
+		}
+		wg.Wait() // Wait for all goroutines to finish
+	*/
 }
 
 func initializeNodes() []*node.Node {
@@ -56,18 +104,12 @@ func initializeNodes() []*node.Node {
 	for _, n := range nodes {
 		for _, other := range nodes {
 			if other.ID != n.ID {
-				AddNeighbor(n, other)
+				node.AddNeighbor(n, other)
 			}
 		}
 	}
 
 	return nodes
-}
-
-func AddNeighbor(n *node.Node, neighbor *node.Node) {
-	n.Mu.Lock()
-	defer n.Mu.Unlock()
-	n.Neighbors = append(n.Neighbors, neighbor)
 }
 
 func activate(n *node.Node) {
@@ -78,4 +120,15 @@ func activate(n *node.Node) {
 		return
 	}
 
+}
+
+type server struct {
+	pb.UnimplementedTestServiceServer
+}
+
+func (s *server) TestThis(ctx context.Context, req *pb.TestRequest) (*pb.TestResponse, error) {
+	log.Print("Test requested by : ")
+	name := req.GetInput()
+	resp := fmt.Sprintf("Hello k xa %s", name)
+	return &pb.TestResponse{Resp: resp}, nil
 }

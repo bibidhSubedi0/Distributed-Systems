@@ -4,6 +4,18 @@ package comm_services;
 option go_package = "/";
 
 
+service TestService{
+    rpc TestThis(TestRequest) returns (TestResponse) {}
+}
+
+message TestRequest{
+    string input = 1;
+}
+
+message TestResponse{
+    string resp = 1;
+}
+
 // Stuff I am going to need
 
 // Leader Election services

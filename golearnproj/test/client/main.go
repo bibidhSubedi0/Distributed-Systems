@@ -31,7 +31,8 @@ func main() {
 	log.Printf("Current Date: %s", dateResp.CurrentDate)
 
 	// Get user info
-	userResp, err := client.GetUserInfo(ctx, &pb.UserRequest{})
+	userResp, err := client.
+		GetUserInfo(ctx, &pb.UserRequest{})
 	if err != nil {
 		log.Fatalf("could not get user info: %v", err)
 	}
