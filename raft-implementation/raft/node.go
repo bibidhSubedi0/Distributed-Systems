@@ -1,9 +1,15 @@
 package node
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"net"
 	"sync"
 	"time"
+
+	pb "github.com/bibidhSubedi0/raft/proto"
+	"google.golang.org/grpc"
 )
 
 type Role int
@@ -55,6 +61,12 @@ type Node struct {
 	electionCh  chan bool     // Channel for election events
 }
 
+type RaftNode struct {
+	pb.UnimplementedTestServiceServer
+	pb.UnimplementedRequestVoteServiceServer
+	*Node
+}
+
 // NewNode creates and initializes a new Node
 func NewNode(id, address string) *Node {
 	n := &Node{
@@ -80,33 +92,37 @@ func AddNeighbor(n *Node, neighbor *Node) {
 	n.Neighbors = append(n.Neighbors, neighbor)
 }
 
-func (n *Node) Start(wg *sync.WaitGroup) {
-	n.run(wg)
+func (n *Node) Start(wg *sync.WaitGroup, s *grpc.Server) {
+	defer wg.Done()
+	fmt.Printf("%s Listner Running\n", n.ID)
+	n.listen(s)
 }
 
 func (n *Node) Stop() {
 	close(n.stopCh)
 }
 
-func (n *Node) run(wg *sync.WaitGroup) {
-	defer wg.Done()
-	fmt.Printf("%s Listner Running\n", n.ID)
-	for {
+func (n *Node) listen(s *grpc.Server) {
+	fmt.Println("Listening")
 
+	lis, err := net.Listen("tcp", n.Address)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	log.Printf("Server is running on :%s", n.Address)
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
-// func (n *Node) listen() {
-// 	lis, err := net.Listen("tcp", ":50051")
-// 	if err != nil {
-// 		log.Fatalf("failed to listen: %v", err)
-// 	}
+func (n *Node) RequestVote() {
 
-// 	s := grpc.NewServer()
-// 	pb.RegisterTestServiceServer(s, &server{})
+}
 
-// 	log.Println("Server is running on :50051")
-// 	if err := s.Serve(lis); err != nil {
-// 		log.Fatalf("failed to serve: %v", err)
-// 	}
-// }
+func (s *RaftNode) TestThis(ctx context.Context, req *pb.TestRequest) (*pb.TestResponse, error) {
+	log.Print("Test requested by : ")
+	name := req.GetInput()
+	resp := fmt.Sprintf("Hello k xa %s", name)
+	return &pb.TestResponse{Resp: resp}, nil
+}

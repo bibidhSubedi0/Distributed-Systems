@@ -1,19 +1,14 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
 	"log"
-	"net"
 	"os"
 	"sync"
-	"time"
 
 	pb "github.com/bibidhSubedi0/raft/proto"
 	node "github.com/bibidhSubedi0/raft/raft"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type ConfigNode struct {
@@ -26,11 +21,18 @@ func main() {
 	// Initlize the nodes
 	nodes := initializeNodes()
 
+	rn := &node.RaftNode{}
+
+	// Register the required services
+	s := grpc.NewServer()
+	pb.RegisterTestServiceServer(s, rn)
+	// pb.RegisterRequestVoteServiceServer(s, rn)
+
 	// Activate the nodes
 	var wg sync.WaitGroup
 	for _, n := range nodes {
 		wg.Add(1)
-		activate(n, &wg)
+		activate(n, &wg, s)
 	}
 
 	// Now i have all the nodes listening
@@ -71,56 +73,8 @@ func initializeNodes() []*node.Node {
 	return nodes
 }
 
-func activate(n *node.Node, wg *sync.WaitGroup) {
+func activate(n *node.Node, wg *sync.WaitGroup, s *grpc.Server) {
 	log.Printf("Starting node %s at address %s\n", n.ID, n.Address)
-	go n.Start(wg)
+	go n.Start(wg, s)
 
-}
-
-type server struct {
-	pb.UnimplementedTestServiceServer
-}
-
-func (s *server) TestThis(ctx context.Context, req *pb.TestRequest) (*pb.TestResponse, error) {
-	log.Print("Test requested by : ")
-	name := req.GetInput()
-	resp := fmt.Sprintf("Hello k xa %s", name)
-	return &pb.TestResponse{Resp: resp}, nil
-}
-
-func listen() {
-	lis, err := net.Listen("tcp", ":50051")
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-
-	s := grpc.NewServer()
-	pb.RegisterTestServiceServer(s, &server{})
-
-	log.Println("Server is running on :50051")
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
-}
-
-func request() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-
-	log.Printf("\nconnected")
-	defer conn.Close()
-
-	client := pb.NewTestServiceClient(conn)
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-
-	rsp, err := client.TestThis(ctx, &pb.TestRequest{Input: "Some input from client"})
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	} else {
-		log.Printf("Response : %s", rsp)
-	}
 }
