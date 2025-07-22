@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"sync"
 	"time"
 
 	pb "github.com/bibidhSubedi0/raft/proto"
@@ -22,61 +23,19 @@ type ConfigNode struct {
 
 func main() {
 
-	var inp bool
+	// Initlize the nodes
+	nodes := initializeNodes()
 
-	_, err := fmt.Scan(&inp)
-	if err != nil {
-		return
+	// Activate the nodes
+	var wg sync.WaitGroup
+	for _, n := range nodes {
+		wg.Add(1)
+		activate(n, &wg)
 	}
 
-	if inp {
-		lis, err := net.Listen("tcp", ":50051")
-		if err != nil {
-			log.Fatalf("failed to listen: %v", err)
-		}
+	// Now i have all the nodes listening
 
-		s := grpc.NewServer()
-		pb.RegisterTestServiceServer(s, &server{})
-
-		log.Println("Server is running on :50051")
-		if err := s.Serve(lis); err != nil {
-			log.Fatalf("failed to serve: %v", err)
-		}
-	} else {
-		conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-
-		log.Printf("\nconnected")
-		defer conn.Close()
-
-		client := pb.NewTestServiceClient(conn)
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		rsp, err := client.TestThis(ctx, &pb.TestRequest{Input: "Some input from client"})
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		} else {
-			log.Printf("Response : %s", rsp)
-		}
-
-	}
-
-	/*
-		nodes := initializeNodes()
-		var wg sync.WaitGroup
-		wg.Add(len(nodes))
-		for _, n := range nodes {
-			go func(n *node.Node) {
-				defer wg.Done()
-				activate(n)
-			}(n)
-		}
-		wg.Wait() // Wait for all goroutines to finish
-	*/
+	wg.Wait() // Will wait until all goroutines call Done()
 }
 
 func initializeNodes() []*node.Node {
@@ -112,13 +71,9 @@ func initializeNodes() []*node.Node {
 	return nodes
 }
 
-func activate(n *node.Node) {
+func activate(n *node.Node, wg *sync.WaitGroup) {
 	log.Printf("Starting node %s at address %s\n", n.ID, n.Address)
-
-	if err := n.Start(); err != nil {
-		log.Printf("Error starting node %s: %v\n", n.ID, err)
-		return
-	}
+	go n.Start(wg)
 
 }
 
@@ -131,4 +86,41 @@ func (s *server) TestThis(ctx context.Context, req *pb.TestRequest) (*pb.TestRes
 	name := req.GetInput()
 	resp := fmt.Sprintf("Hello k xa %s", name)
 	return &pb.TestResponse{Resp: resp}, nil
+}
+
+func listen() {
+	lis, err := net.Listen("tcp", ":50051")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	s := grpc.NewServer()
+	pb.RegisterTestServiceServer(s, &server{})
+
+	log.Println("Server is running on :50051")
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+
+func request() {
+	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+
+	log.Printf("\nconnected")
+	defer conn.Close()
+
+	client := pb.NewTestServiceClient(conn)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	rsp, err := client.TestThis(ctx, &pb.TestRequest{Input: "Some input from client"})
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	} else {
+		log.Printf("Response : %s", rsp)
+	}
 }
