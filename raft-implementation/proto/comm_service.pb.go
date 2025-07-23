@@ -111,6 +111,8 @@ func (x *TestResponse) GetResp() string {
 
 type RequestVoteRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -145,8 +147,23 @@ func (*RequestVoteRequest) Descriptor() ([]byte, []int) {
 	return file_comm_service_proto_rawDescGZIP(), []int{2}
 }
 
+func (x *RequestVoteRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *RequestVoteRequest) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
 type RequestVoteResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	VoteGiven     bool                   `protobuf:"varint,1,opt,name=voteGiven,proto3" json:"voteGiven,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -179,6 +196,13 @@ func (x *RequestVoteResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RequestVoteResponse.ProtoReflect.Descriptor instead.
 func (*RequestVoteResponse) Descriptor() ([]byte, []int) {
 	return file_comm_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *RequestVoteResponse) GetVoteGiven() bool {
+	if x != nil {
+		return x.VoteGiven
+	}
+	return false
 }
 
 type AppendEntriesRequest struct {
@@ -693,9 +717,12 @@ const file_comm_service_proto_rawDesc = "" +
 	"\vTestRequest\x12\x14\n" +
 	"\x05input\x18\x01 \x01(\tR\x05input\"\"\n" +
 	"\fTestResponse\x12\x12\n" +
-	"\x04resp\x18\x01 \x01(\tR\x04resp\"\x14\n" +
-	"\x12RequestVoteRequest\"\x15\n" +
-	"\x13RequestVoteResponse\"\x16\n" +
+	"\x04resp\x18\x01 \x01(\tR\x04resp\">\n" +
+	"\x12RequestVoteRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
+	"\aaddress\x18\x02 \x01(\tR\aaddress\"3\n" +
+	"\x13RequestVoteResponse\x12\x1c\n" +
+	"\tvoteGiven\x18\x01 \x01(\bR\tvoteGiven\"\x16\n" +
 	"\x14AppendEntriesRequest\"\x17\n" +
 	"\x15AppendEntriedResponse\"\x15\n" +
 	"\x13ReplicateLogRequest\"\x16\n" +

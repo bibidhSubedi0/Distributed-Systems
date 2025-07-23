@@ -74,7 +74,5 @@ func initializeNodes() []*node.Node {
 }
 
 func activate(n *node.Node, wg *sync.WaitGroup, s *grpc.Server) {
-	log.Printf("Starting node %s at address %s\n", n.ID, n.Address)
 	go n.Start(wg, s)
-
 }

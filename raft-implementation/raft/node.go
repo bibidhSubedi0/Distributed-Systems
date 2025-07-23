@@ -10,6 +10,7 @@ import (
 
 	pb "github.com/bibidhSubedi0/raft/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Role int
@@ -94,8 +95,10 @@ func AddNeighbor(n *Node, neighbor *Node) {
 
 func (n *Node) Start(wg *sync.WaitGroup, s *grpc.Server) {
 	defer wg.Done()
-	fmt.Printf("%s Listner Running\n", n.ID)
-	n.listen(s)
+	go n.listen(s)
+	time.Sleep(time.Millisecond)
+	go n.request(s)
+	wg.Wait()
 }
 
 func (n *Node) Stop() {
@@ -103,20 +106,41 @@ func (n *Node) Stop() {
 }
 
 func (n *Node) listen(s *grpc.Server) {
-	fmt.Println("Listening")
-
 	lis, err := net.Listen("tcp", n.Address)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	log.Printf("Server is running on :%s", n.Address)
+	log.Printf("%s Listner Running\n", n.Address)
+
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+
 }
 
-func (n *Node) RequestVote() {
+func (n *Node) request(s *grpc.Server) {
+	// Make a vote request
+	var toconnect = "localhost:5002"
+	conn, err := grpc.Dial(toconnect, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+
+	log.Printf("connected to: %s\n", toconnect)
+	defer conn.Close()
+
+	client := pb.NewTestServiceClient(conn)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	rsp, err := client.TestThis(ctx, &pb.TestRequest{Input: "Some input from client", Id: n.ID})
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	} else {
+		log.Printf("Response : %s", rsp)
+	}
 
 }
 
@@ -125,4 +149,11 @@ func (s *RaftNode) TestThis(ctx context.Context, req *pb.TestRequest) (*pb.TestR
 	name := req.GetInput()
 	resp := fmt.Sprintf("Hello k xa %s", name)
 	return &pb.TestResponse{Resp: resp}, nil
+}
+
+func (s *RaftNode) RequestVote(ctx context.Context, req *pb.RequestVoteRequest) (*pb.RequestVoteResponse, error) {
+	log.Printf("Vote requested by : %s", s.ID)
+	var vote = false
+
+	return &pb.RequestVoteResponse{VoteGiven: vote}, nil
 }

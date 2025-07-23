@@ -10,6 +10,8 @@ service TestService{
 
 message TestRequest{
     string input = 1;
+    string id = 2;
+    string address = 3;
 }
 
 message TestResponse{
@@ -41,9 +43,14 @@ service RequestVoteService{
 
 }
 
-message RequestVoteRequest{}
+message RequestVoteRequest{
+    string id = 1;
+    string address = 2;
+}
 
-message RequestVoteResponse{}
+message RequestVoteResponse{
+    bool voteGiven = 1;
+}
 
 message AppendEntriesRequest{}
 
